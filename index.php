@@ -40,7 +40,7 @@ while ($cat = mysqli_fetch_assoc($categoryQuery)) {
   </section>
 
   <section class="featured">
-    <h2>FEATURED PRODUCTS</h2>
+    <h2><center>OUR PRODUCTS</center></h2>
     <div class="products-grid">
       
     </div>
@@ -64,7 +64,7 @@ while ($cat = mysqli_fetch_assoc($categoryQuery)) {
       <a href=""><img src="images/fb.png" alt="Facebook"></a>
       <a href=""><img src="images/wa.png" alt="Whatsapp"></a>
     </div>
-    <p>&copy; 2025 FOSTRO | All Rights Reserved</p>
+    <p>&copy; 2025 FROSTO | All Rights Reserved</p>
   </footer>
 
   <button id="scrollTopBtn" title="Go to top">🠉</button>

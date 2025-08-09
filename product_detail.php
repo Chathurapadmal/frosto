@@ -21,14 +21,14 @@ $product = mysqli_fetch_assoc($result);
     <p>Price: <strong>Rs. <?php echo $product['price']; ?></strong></p>
 
     <form action="cart.php" method="POST">
-      <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
-      <input type="hidden" name="product_name" value="<?php echo htmlspecialchars($product['name']); ?>">
-      <input type="hidden" name="product_price" value="<?php echo $product['price']; ?>">
+<form action="cart.php" method="POST">
+  <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
+  <input type="hidden" name="product_name" value="<?= htmlspecialchars($product['name']) ?>">
+  <input type="hidden" name="product_price" value="<?= $product['price'] ?>">
+  <input type="number" name="quantity" value="1" min="1">
+  <button type="submit" name="add_to_cart">Add to Cart</button>
+</form>
 
-      <label for="quantity">Quantity:</label>
-      <input type="number" name="quantity" id="quantity" value="1" min="1" required>
-
-      <button type="submit" name="add_to_cart" class="btn">Add to Cart</button>
     </form>
   </div>
 </body>

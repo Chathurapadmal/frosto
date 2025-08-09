@@ -1,42 +1,73 @@
 <?php
 session_start();
+require 'includes/db.php'; 
+
+if (!isset($_SESSION['cart']) || !is_array($_SESSION['cart'])) {
+  $_SESSION['cart'] = [];
+}
 
 if (isset($_POST['add_to_cart'])) {
-  $item = [
-    'id' => $_POST['product_id'],
-    'name' => $_POST['product_name'],
-    'price' => $_POST['product_price'],
-    'quantity' => $_POST['quantity']
-  ];
+  $id   = (int)($_POST['product_id'] ?? 0);
+  $name = trim($_POST['product_name'] ?? '');
+  $price = $_POST['product_price'] ?? '';
+  $qty   = max(1, (int)($_POST['quantity'] ?? 1));
 
-  if (!isset($_SESSION['cart'])) {
-    $_SESSION['cart'] = [];
+  if ($price !== '') {
+    $price = (float)preg_replace('/[^\d.]/', '', (string)$price);
   }
 
-  $found = false;
-  foreach ($_SESSION['cart'] as &$cartItem) {
-    if ($cartItem['id'] == $item['id']) {
-      $cartItem['quantity'] += $item['quantity'];
-      $found = true;
-      break;
+  if ($id > 0 && ($name === '' || $price === '' || $price <= 0)) {
+    $res = $conn->prepare("SELECT id, name, price FROM products WHERE id = ?");
+    $res->bind_param("i", $id);
+    $res->execute();
+    $p = $res->get_result()->fetch_assoc();
+    if ($p) {
+      if ($name === '')  $name  = $p['name'];
+      if ($price <= 0)   $price = (float)$p['price'];
     }
   }
 
-  if (!$found) {
-    $_SESSION['cart'][] = $item;
+  if ($id > 0 && $name !== '' && $price >= 0) {
+    if (!isset($_SESSION['cart'][$id])) {
+      $_SESSION['cart'][$id] = [
+        'id' => $id,
+        'name' => $name,
+        'price' => (float)$price,
+        'quantity' => $qty
+      ];
+    } else {
+      $_SESSION['cart'][$id]['quantity'] += $qty;
+    }
   }
 
   header('Location: cartmain.php');
+  exit;
+}
+
+if (isset($_POST['ajax']) && $_POST['ajax'] === '1') {
+  $id  = (int)($_POST['id'] ?? 0);
+  $qty = max(1, (int)($_POST['qty'] ?? 1));
+
+  if ($id > 0 && isset($_SESSION['cart'][$id])) {
+    $_SESSION['cart'][$id]['quantity'] = $qty;
+
+    $itemTotal = $_SESSION['cart'][$id]['price'] * $_SESSION['cart'][$id]['quantity'];
+    $grandTotal = 0;
+    foreach ($_SESSION['cart'] as $it) $grandTotal += ($it['price'] * $it['quantity']);
+
+    header('Content-Type: application/json');
+    echo json_encode(['ok'=>true,'itemTotal'=>$itemTotal,'grandTotal'=>$grandTotal]);
+    exit;
+  }
+
+  header('Content-Type: application/json');
+  echo json_encode(['ok'=>false]);
   exit;
 }
 
 if (isset($_GET['remove'])) {
-  foreach ($_SESSION['cart'] as $key => $item) {
-    if ($item['id'] == $_GET['remove']) {
-      unset($_SESSION['cart'][$key]);
-    }
-  }
+  $removeId = (int)$_GET['remove'];
+  unset($_SESSION['cart'][$removeId]);
   header('Location: cartmain.php');
   exit;
 }
-?>

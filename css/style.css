@@ -898,7 +898,6 @@ input:checked + .slider:before {
   animation: spin 1s linear infinite;
 }
 
-/* Spin keyframes */
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -1038,4 +1037,19 @@ input:checked + .slider:before {
   font-size: 14px;
   margin-top: -10px;
   margin-bottom: 15px;
+}
+
+.about-image {
+  display: block;           
+  max-width: 20%;            
+  height: auto;               
+  margin: 20px auto;          
+  border-radius: 20px;        
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.about-image:hover {
+  transform: scale(1.03);     
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); 
 }
