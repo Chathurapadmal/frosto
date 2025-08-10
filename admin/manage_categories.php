@@ -36,9 +36,10 @@ $categories = mysqli_query($conn, "SELECT * FROM categories");
 <html>
 <head>
   <title>Manage Categories</title>
-  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin_style.css">
 </head>
 <body>
+    <a href="dashboard.php" class="btn" style="margin:20px;display:inline-block;">Main Page</a>
 <div class="dashboard-container">
   <h2>Manage Categories</h2>
 

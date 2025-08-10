@@ -2,41 +2,35 @@
 require '../includes/db.php';
 session_start();
 
-// Optional: throw mysqli errors as exceptions (helps debug)
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 $msg = '';
 $err = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  // Read & normalize inputs
   $name  = trim($_POST['name'] ?? '');
   $cat   = trim($_POST['category'] ?? '');
   $desc  = trim($_POST['description'] ?? '');
   $price = (float)($_POST['price'] ?? 0);
   $stock = (int)($_POST['stock'] ?? 0);
 
-  // Basic validation
   if ($name === '' || $cat === '' || $desc === '') {
     $err = 'Please fill all required fields.';
   } elseif ($price < 0 || $stock < 0) {
     $err = 'Price/Stock cannot be negative.';
   } else {
-    // Handle image upload (to ../images)
     $imageFile = '';
     if (!empty($_FILES['image']['name'])) {
       $orig = $_FILES['image']['name'];
       $ext  = strtolower(pathinfo($orig, PATHINFO_EXTENSION));
-      // Allow only common image extensions
       $allowed = ['jpg','jpeg','png','gif','webp'];
       if (!in_array($ext, $allowed, true)) {
         $err = 'Invalid image type. Allowed: jpg, jpeg, png, gif, webp.';
       } else {
-        // Safe, unique filename
         $base = preg_replace('/[^a-zA-Z0-9_\-]/', '_', pathinfo($orig, PATHINFO_FILENAME));
         $imageFile = $base . '_' . time() . '.' . $ext;
 
-        $dest = dirname(__DIR__) . '/images/' . $imageFile; // ../images/filename.ext
+        $dest = dirname(__DIR__) . '/images/' . $imageFile; 
         if (!move_uploaded_file($_FILES['image']['tmp_name'], $dest)) {
           $err = 'Failed to upload image.';
         }
@@ -45,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $err = 'Image is required.';
     }
 
-    // Insert if no errors
     if ($err === '') {
        $stmt = $conn->prepare(
   "INSERT INTO products (name, category, description, price, image_path, stock)
@@ -61,7 +54,6 @@ $stmt->execute();
   }
 }
 
-// Fetch categories for dropdown (fallback to fixed list if none yet)
 $categories = mysqli_query($conn, "SELECT DISTINCT category FROM products ORDER BY category");
 $fallbackCats = ['Study & Essentials', 'Snacks', 'Clothings'];
 ?>
