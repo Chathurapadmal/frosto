@@ -7,9 +7,9 @@ $products = mysqli_query($conn, "SELECT * FROM products");
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>NSBM Shop</title>
   <link rel="stylesheet" href="../css/style.css">
-  <link rel="stylesheet" href="css/darkmode.css">
 </head>
 <body>
  
@@ -22,7 +22,10 @@ $products = mysqli_query($conn, "SELECT * FROM products");
     <img src="images/arr.png" alt="Model" class="hero-img">
   </header>
    </div>
-  
+<div style="text-align: center; font-size: 30px; font-weight: bold; color: #333; margin: 10px 0;">
+  Categories
+</div>
+
     <section class="categories">
   <?php
 $categoryQuery = mysqli_query($conn, "SELECT * FROM categories");

@@ -45,11 +45,15 @@ $user = $_SESSION['user'];
   </style>
 </head>
 <body>
+
+  <?php include 'nav.php'; ?>
+
   <div class="profile-box">
     <h2>Hello, <?= htmlspecialchars($user['full_name']) ?> 👋</h2>
     <p><strong>Username:</strong> <?= htmlspecialchars($user['username']) ?></p>
     <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
     <a href="logout.php" class="btn">Logout</a>
   </div>
+
 </body>
 </html>

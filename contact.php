@@ -12,12 +12,35 @@ include 'nav.php';
 
       <section class="page-section">
     <h2>Contact Us</h2>
-    <form class="contact-form">
-      <input type="text" placeholder="Your Name" required />
-      <input type="email" placeholder="Your Email" required />
-      <textarea rows="5" placeholder="Your Message" required></textarea>
-      <button type="submit">Send Message</button>
-    </form>
+<form class="contact-form" style="max-width: 500px; margin: auto; padding: 20px; background: #f9f9f9; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 15px;">
+  <input type="text" placeholder="Your Name" required 
+         style="padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 5px; width: 100%; box-sizing: border-box;">
+  
+  <input type="email" placeholder="Your Email" required 
+         style="padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 5px; width: 100%; box-sizing: border-box;">
+  
+  <textarea rows="5" placeholder="Your Message" required 
+            style="padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 5px; width: 100%; box-sizing: border-box; resize: vertical;"></textarea>
+  
+  <button type="submit" 
+          style="padding: 12px; font-size: 16px; background-color: #333; color: white; border: none; border-radius: 5px; cursor: pointer;">
+    Send Message
+  </button>
+</form>
+
+<style>
+  @media (max-width: 600px) {
+    .contact-form {
+      padding: 15px !important;
+    }
+    .contact-form input,
+    .contact-form textarea,
+    .contact-form button {
+      font-size: 14px !important;
+    }
+  }
+</style>
+
   </section>
 
   <section class="store-location">

@@ -1,8 +1,8 @@
 <?php
 $servername = "localhost";
-$username = "root";
-$password = ""; 
-$database = "nsbm_shop";
+$username = "u931839000_stosrho";
+$password = "AOZht4Opug"; 
+$database = "u931839000_stosrho";
 $port = 3309;  
 
 // Create connection

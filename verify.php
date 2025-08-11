@@ -1,38 +1,33 @@
 <?php
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+// verify.php
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+require __DIR__ . '/includes/db.php';
 
-// Include PHPMailer classes
-require 'includes/PHPMailer/src/PHPMailer.php';
-require 'includes/PHPMailer/src/SMTP.php';
-require 'includes/PHPMailer/src/Exception.php';
+$email = $_GET['email'] ?? '';
+$token = $_GET['token'] ?? '';
 
-$mail = new PHPMailer(true);
+function out($msg){ echo $msg; exit; }
 
-try {
-  $mail->isSMTP();
-  $mail->Host = 'smtp.gmail.com';
-  $mail->SMTPAuth = true;
-  $mail->Username = 'contact.teamfrosto@gmail.com';     
-  $mail->Password = 'pqra phdr ztsy mfun';            
-  $mail->SMTPSecure = 'tls';
-  $mail->Port = 587;
+if ($email === '' || $token === '') out('Missing email or token.');
 
-  $mail->setFrom('contact.teamfrosto@gmail.com', 'frosto');
-  $mail->addAddress($email, $fullName);
+$email = trim($email);
+$token = trim($token);
 
-  
-  $mail->isHTML(true);
-  $mail->Subject = 'Verify Your Account';
-  $mail->Body    = "Hi $fullName,<br><br>
-    Please verify your account by clicking the link below:<br>
-    <a href='$verifyLink'>$verifyLink</a><br><br>Thanks,<br>Frosto Team";
+// Look up by email
+$chk = $conn->prepare("SELECT id, is_verified, verification_token FROM users WHERE email = ?");
+$chk->bind_param("s", $email);
+$chk->execute();
+$user = $chk->get_result()->fetch_assoc();
 
-  $mail->send();
-  $msg = "Registered! A verification email has been sent to <strong>$email</strong>.";
-} catch (Exception $e) {
-  $msg = " Error sending email: {$mail->ErrorInfo}";
+if (!$user) out('❌ Invalid email.');
+if ((int)$user['is_verified'] === 1) out("✅ Already verified. <a href='login.php'>Login</a>");
+if (!hash_equals((string)$user['verification_token'], (string)$token)) {
+  out('❌ Invalid or expired verification link.');
 }
 
-?>
+// Mark verified
+$upd = $conn->prepare("UPDATE users SET is_verified = 1, verification_token = NULL WHERE id = ?");
+$upd->bind_param("i", $user['id']);
+$upd->execute();
 
+out("✅ Email verified successfully. <a href='login.php'>Login here</a>");
